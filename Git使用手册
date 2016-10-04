@@ -1,0 +1,186 @@
+
+基本操作：
+git 工作方式流程图：
+/home/weixiang/workspace/0.jpg
+首现 没有init的目录  先要
+git init
+git add . //添加当前所有文件到storage
+
+git commit -m " description " ：将storage 提交到master
+
+git remote add origin "http......" 添加个远端
+
+git push -u origin master  将本地master 同步到远端master
+
+
+
+git push与git pull是一对推送/拉取分支的git命令。
+                  PUSH PUSH： 
+git push 使用本地的对应分支来更新对应的远程分支。
+
+$ git push <远程主机名> <本地分支名>:<远程分支名>  For Example :git push origin:master master
+注意: 命令中的本地分支是指将要被推送到远端的分支，而远程分支是指推送的目标分支，即将本地分支合并到远程分支。 
+如果省略远程分支名，则表示将本地分支推送与之存在”追踪关系”的远程分支(通常两者同名)，如果该远程分支不存在，则会被新建。
+
+$ git push origin :master  //什么也不推送就是删除啦 嘻嘻
+# 等同于
+$ git push origin --delete master
+如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支，这条命令是删除远程master分支。
+
+如果当前分支与多个主机存在追踪关系，则可以使用-u选项指定一个默认主机，这样后面就可以不加任何参数使用git push。
+$ git push -u origin master
+
+还有一种情况，就是不管是否存在对应的远程分支，将本地的所有分支都推送到远程主机，这时需要使用–all选项。
+$ git push --all origin
+
+如果远程主机的版本比本地版本更新，推送时Git会报错，要求先在本地做git pull合并差异，然后再推送到远程主机。这时，如果你一定要推送，可以使用–force选项。
+$ git push --force origin
+上面命令使用–force选项，结果导致在远程主机产生一个”非直进式”的合并(non-fast-forward merge)。除非你很确定要这样做，否则应该尽量避免使用–force选项。
+
+最后，git push不会推送标签(tag)，除非使用–tags选项。
+$ git push origin --tags
+
+		PULL PULL PULL PULL :
+git pull <远程主机> <远程分支>:<本地分支>
+git pull origin master:my_test
+上面的命令是将origin厂库的master分支拉取并合并到本地的my_test分支上。
+如果省略本地分支，则将自动合并到"当前"所在分支上。如下：
+git pull origin master
+
+
+对于pull操作：
+1.pull会使用git merge导致冲突，需要将冲突的文件resolve掉 git add -u, git commit之后才能成功pull.
+
+2.如果想放弃本地的文件修改，可以使用git reset --hard FETCH_HEAD，FETCH_HEAD表示上一次成功git pull之后形成的commit点。然后git pull.
+
+
+
+
+
+
+
+
+
+--------------------**************************************-----------------------------***************************-----------------************
+对于   “分支”   的操作：
+
+
+查看远程分支
+$ git branch -a
+ 
+* br-2.1.2.2
+ 
+master
+ 
+remotes/origin/HEAD -> origin/master
+ 
+remotes/origin/br-2.1.2.1
+ 
+remotes/origin/br-2.1.2.2
+ 
+remotes/origin/br-2.1.3
+ 
+remotes/origin/master
+
+2 查看本地分支
+$ git branch
+* br-2.1.2.2
+ 
+master
+$ git branch -v
+//查看分支从属关系
+WeiXiao 3c938ea newXinxin
+master  c963eae [领先 1] 10__03_21:19
+
+
+3 创建分支
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (br-2.1.2.2)
+$ git branch test
+$ git branch 
+* br-2.1.2.2
+ 
+master
+test
+
+4 先查看再切换分支到test
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (br-2.1.2.2)
+$ git branch
+* br-2.1.2.2
+master
+test
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (br-2.1.2.2)
+ 
+$ git checkout test
+ 
+M jingwei-server/src/main/java/com/taobao/jingwei/server/service/cmd/GetCustomerTarCmd.java
+ 
+M jingwei-server/src/main/java/com/taobao/jingwei/server/util/ServerUtil.java
+ 
+Switched to branch 'test'
+ 
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (test)
+ 
+$ git branch
+ 
+br-2.1.2.2
+ 
+master
+ 
+* test
+
+
+5 删除本地分支   git branch -d xxxxx
+$ git checkout br-2.1.2.2
+ 
+M jingwei-server/src/main/java/com/taobao/jingwei/server/service/cmd/GetCustomerTarCmd.java
+ 
+M jingwei-server/src/main/java/com/taobao/jingwei/server/util/ServerUtil.java
+ 
+Switched to branch 'br-2.1.2.2'
+ 
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (br-2.1.2.2)
+ 
+$ git br
+ 
+* br-2.1.2.2
+ 
+master
+ 
+test
+ 
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (br-2.1.2.2)
+ 
+$ git br -d test
+ 
+Deleted branch test (was 17d28d9).
+ 
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (br-2.1.2.2)
+ 
+$ git br
+ 
+* br-2.1.2.2
+ 
+master
+
+6 查看本地和远程分支  -a。前面带*号的代表你当前工作目录所处的分支
+shuohailhl@SHUOHAILHL-PC /f/ggg/jingwei (test)
+ 
+$ git branch -a
+ 
+br-2.1.2.2
+ 
+master
+ 
+* test
+ 
+remotes/origin/HEAD -> origin/master
+ 
+remotes/origin/br-2.1.2.1
+ 
+remotes/origin/br-2.1.2.2
+ 
+remotes/origin/br-2.1.3
+ 
+remotes/origin/master
+
+
